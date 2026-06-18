@@ -1,182 +1,174 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>삼삼 쇼츠 레이더</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --p:#7C3AED; --p2:#895FFC; --b:#3B82F6;
-  --grad:linear-gradient(135deg,#7C3AED 0%,#3B82F6 100%);
-  --grad-soft:linear-gradient(135deg,rgba(124,58,237,.07) 0%,rgba(59,130,246,.07) 100%);
-  --bg:#F7F5FF; --surface:#fff; --surface2:#F9F8FF;
-  --text:#111827; --text2:#374151; --muted:#9CA3AF;
-  --border:#EDE9FE; --border2:#E5E7EB;
-  --green:#059669; --green-bg:#ECFDF5;
-  --amber:#D97706; --amber-bg:#FFFBEB;
-  --red:#DC2626; --red-bg:#FEF2F2;
-  --r:14px; --rs:8px;
-  --sh:0 1px 3px rgba(0,0,0,.05),0 4px 16px rgba(124,58,237,.06);
-  --sh2:0 4px 12px rgba(0,0,0,.07),0 12px 32px rgba(124,58,237,.13);
+  --p: #7C3AED; --p2: #895FFC; --b: #3B82F6;
+  --grad: linear-gradient(135deg, #7C3AED 0%, #3B82F6 100%);
+  --grad-s: linear-gradient(135deg, rgba(124,58,237,.07) 0%, rgba(59,130,246,.07) 100%);
+  --bg: #F7F5FF; --card: #fff; --card2: #F9F8FF;
+  --t1: #111827; --t2: #374151; --t3: #9CA3AF;
+  --bd1: #EDE9FE; --bd2: #E5E7EB;
+  --gn: #059669; --gn-bg: #ECFDF5;
+  --am: #D97706; --am-bg: #FFFBEB;
+  --rd: #DC2626; --rd-bg: #FEF2F2;
+  --r: 14px; --rs: 8px;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans KR','Apple SD Gothic Neo',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.5;}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; background: var(--bg); color: var(--t1); -webkit-font-smoothing: antialiased; }
 
-/* TOPBAR */
-.topbar{position:sticky;top:0;z-index:200;height:56px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.brand-mark{width:32px;height:32px;border-radius:9px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;letter-spacing:-.5px;}
-.brand-name{font-size:16px;font-weight:800;color:var(--text);}
-.scan-time{font-size:12px;color:var(--muted);}
+/* topbar */
+.topbar { position: sticky; top: 0; z-index: 100; height: 56px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bd1); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: var(--grad); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff; }
+.brand-name { font-size: 16px; font-weight: 800; color: var(--t1); }
+#scan-time { font-size: 12px; color: var(--t3); }
 
-/* API BAR */
-.api-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 28px;display:flex;align-items:center;gap:10px;}
-.api-lbl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--p);white-space:nowrap;}
-.api-dot{width:7px;height:7px;border-radius:50%;background:#D1D5DB;}
-.api-dot.on{background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.2);}
-.api-input{flex:1;max-width:360px;padding:7px 12px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:'SF Mono','Menlo',monospace;background:var(--surface2);color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;letter-spacing:.02em;}
-.api-input:focus{border-color:var(--p2);box-shadow:0 0 0 3px rgba(137,95,252,.14);}
-.btn-api{padding:7px 16px;border-radius:var(--rs);background:var(--grad);color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s;}
-.btn-api:hover{opacity:.88;}
-.api-hint{font-size:11px;color:var(--muted);}
+/* api bar */
+.api-bar { background: var(--card); border-bottom: 1px solid var(--bd1); padding: 10px 28px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.api-lbl { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--p); white-space: nowrap; }
+.api-dot { width: 7px; height: 7px; border-radius: 50%; background: #D1D5DB; }
+.api-dot.on { background: #10B981; box-shadow: 0 0 0 3px rgba(16,185,129,.2); }
+.api-input { flex: 1; max-width: 360px; padding: 7px 12px; border: 1.5px solid var(--bd1); border-radius: var(--rs); font-size: 13px; font-family: monospace; background: var(--card2); color: var(--t1); outline: none; }
+.api-input:focus { border-color: var(--p2); box-shadow: 0 0 0 3px rgba(137,95,252,.14); }
+.btn-save { padding: 7px 16px; border-radius: var(--rs); background: var(--grad); color: #fff; border: none; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.btn-save:hover { opacity: .88; }
+#api-hint { font-size: 11px; color: var(--t3); }
 
-/* MAIN */
-.main{max-width:1280px;margin:0 auto;padding:28px 28px 60px;}
+/* main */
+.main { max-width: 1280px; margin: 0 auto; padding: 28px 28px 60px; }
 
-/* HERO */
-.hero{background:var(--grad-soft);border:1px solid var(--border);border-radius:var(--r);padding:22px 26px;margin-bottom:22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
-.hero-text{flex:1;min-width:200px;}
-.hero-title{font-size:19px;font-weight:800;color:var(--text);line-height:1.3;}
-.hero-title em{font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.hero-desc{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;}
-.btn-scan{display:flex;align-items:center;gap:9px;padding:13px 26px;border-radius:12px;background:var(--grad);color:#fff;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s,box-shadow .15s;white-space:nowrap;box-shadow:0 4px 14px rgba(124,58,237,.32);}
-.btn-scan:hover:not(:disabled){opacity:.92;transform:translateY(-1px);}
-.btn-scan:disabled{opacity:.44;cursor:not-allowed;box-shadow:none;}
+/* hero */
+.hero { background: var(--grad-s); border: 1px solid var(--bd1); border-radius: var(--r); padding: 22px 26px; margin-bottom: 22px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.hero-t { flex: 1; min-width: 200px; }
+.hero-title { font-size: 19px; font-weight: 800; line-height: 1.3; }
+.hero-title em { font-style: normal; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-desc { font-size: 13px; color: var(--t3); margin-top: 4px; line-height: 1.6; }
+.btn-scan { display: flex; align-items: center; gap: 9px; padding: 13px 26px; border-radius: 12px; background: var(--grad); color: #fff; border: none; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(124,58,237,.32); white-space: nowrap; transition: opacity .15s, transform .1s; }
+.btn-scan:hover:not(:disabled) { opacity: .92; transform: translateY(-1px); }
+.btn-scan:disabled { opacity: .44; cursor: not-allowed; box-shadow: none; }
 
-/* PROGRESS */
-.prog-card{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 22px;margin-bottom:22px;}
-.prog-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--p2);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.prog-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:6px;}
-.prog-fill{height:100%;background:var(--grad);border-radius:3px;transition:width .4s ease;width:0%;}
-.prog-sub{font-size:11px;color:var(--muted);}
+/* progress */
+.prog { display: none; background: var(--card); border: 1px solid var(--bd1); border-radius: var(--r); padding: 18px 22px; margin-bottom: 22px; }
+.prog-lbl { font-size: 13px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.spin { width: 14px; height: 14px; border: 2px solid var(--bd1); border-top-color: var(--p2); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.prog-track { height: 6px; background: var(--bd1); border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+.prog-fill { height: 100%; background: var(--grad); border-radius: 3px; transition: width .4s; width: 0%; }
+.prog-sub { font-size: 11px; color: var(--t3); }
 
-/* STATS */
-.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
-.stat-tile{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:16px 18px;}
-.stat-tile.hi{background:var(--grad-soft);border-color:rgba(124,58,237,.2);}
-.stat-n{font-size:26px;font-weight:800;line-height:1;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.stat-l{font-size:12px;color:var(--muted);margin-top:3px;}
+/* stats */
+.stats { display: none; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 22px; }
+.stat { background: var(--card); border: 1px solid var(--bd2); border-radius: var(--r); padding: 16px 18px; }
+.stat.hi { background: var(--grad-s); border-color: rgba(124,58,237,.2); }
+.stat-n { font-size: 26px; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-l { font-size: 12px; color: var(--t3); margin-top: 3px; }
 
-/* TOOLBAR */
-.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
-.chip{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid var(--border2);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none;}
-.chip:hover:not(.active){border-color:var(--p2);color:var(--p2);}
-.chip.active{background:var(--p2);border-color:var(--p2);color:#fff;}
-.tsep{width:1px;height:20px;background:var(--border2);margin:0 2px;}
-.slbl{font-size:12px;color:var(--muted);white-space:nowrap;}
+/* toolbar */
+.toolbar { display: none; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 13px; border-radius: 20px; font-size: 12px; font-weight: 500; border: 1.5px solid var(--bd2); background: var(--card); color: var(--t3); cursor: pointer; white-space: nowrap; user-select: none; transition: all .15s; }
+.chip:hover:not(.on) { border-color: var(--p2); color: var(--p2); }
+.chip.on { background: var(--p2); border-color: var(--p2); color: #fff; }
+.sep { width: 1px; height: 20px; background: var(--bd2); margin: 0 2px; }
+.slbl { font-size: 12px; color: var(--t3); white-space: nowrap; }
 
-/* GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;}
+/* grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; }
+.empty { grid-column: 1/-1; text-align: center; padding: 80px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.empty-ico { width: 64px; height: 64px; border-radius: 18px; background: var(--grad-s); display: flex; align-items: center; justify-content: center; font-size: 28px; }
+.empty h3 { font-size: 18px; font-weight: 700; }
+.empty p { font-size: 14px; color: var(--t3); line-height: 1.7; max-width: 300px; }
 
-/* EMPTY */
-.empty{grid-column:1/-1;text-align:center;padding:80px 24px;display:flex;flex-direction:column;align-items:center;gap:12px;}
-.empty-ico{width:64px;height:64px;border-radius:18px;background:var(--grad-soft);display:flex;align-items:center;justify-content:center;font-size:28px;}
-.empty h3{font-size:18px;font-weight:700;color:var(--text);}
-.empty p{font-size:14px;color:var(--muted);line-height:1.7;max-width:300px;}
+/* card */
+.card { background: var(--card); border: 1px solid var(--bd2); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; transition: box-shadow .2s, transform .15s, border-color .2s; }
+.card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.07), 0 12px 32px rgba(124,58,237,.13); transform: translateY(-2px); border-color: var(--bd1); }
+.card.ok { border-color: var(--p2); box-shadow: 0 0 0 2px rgba(124,58,237,.1); }
+.card-top { height: 3px; background: var(--bd2); }
+.card.ok .card-top { background: var(--grad); }
 
-/* CARD */
-.card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;transition:box-shadow .2s,transform .15s,border-color .2s;display:flex;flex-direction:column;}
-.card:hover{box-shadow:var(--sh2);transform:translateY(-2px);border-color:var(--border);}
-.card.ok{border-color:var(--p2);box-shadow:0 0 0 2px rgba(124,58,237,.1);}
-.card.ok:hover{box-shadow:0 0 0 2px rgba(124,58,237,.18),var(--sh2);}
-.card-accent{height:3px;background:var(--border2);}
-.card.ok .card-accent{background:var(--grad);}
+.card-head { padding: 16px 16px 10px; display: flex; align-items: flex-start; gap: 12px; }
+.avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--bd1); flex-shrink: 0; }
+.avatar-ph { width: 46px; height: 46px; border-radius: 50%; background: var(--grad); display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; color: #fff; flex-shrink: 0; }
+.ch-info { flex: 1; min-width: 0; }
+.ch-name { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.ch-name-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px; }
+.badge-ok { padding: 2px 7px; border-radius: 20px; background: var(--grad); color: #fff; font-size: 10px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+.ch-handle { font-size: 11px; color: var(--t3); margin-top: 2px; }
 
-/* card head */
-.card-head{padding:16px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
-.avatar{width:46px;height:46px;border-radius:50%;flex-shrink:0;object-fit:cover;border:2px solid var(--border);}
-.avatar-ph{width:46px;height:46px;border-radius:50%;flex-shrink:0;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;}
-.ch-info{flex:1;min-width:0;}
-.ch-name{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
-.ch-name-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:155px;}
-.badge-ok{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;background:var(--grad);color:#fff;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;}
-.ch-handle{font-size:11px;color:var(--muted);margin-top:2px;}
+.sring { flex-shrink: 0; width: 46px; height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 50%; border: 2.5px solid var(--bd2); }
+.sring.hi { border-color: var(--p2); background: rgba(137,95,252,.05); }
+.sring.md { border-color: var(--b); background: rgba(59,130,246,.05); }
+.sring.lo { border-color: var(--bd2); }
+.sn { font-size: 16px; font-weight: 800; line-height: 1; }
+.sring.hi .sn { color: var(--p2); }
+.sring.md .sn { color: var(--b); }
+.sring.lo .sn { color: var(--t3); }
+.sl { font-size: 9px; color: var(--t3); margin-top: 1px; }
 
-/* score ring */
-.sring{flex-shrink:0;width:46px;height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;border:2.5px solid var(--border2);}
-.sring.hi{border-color:var(--p2);background:rgba(137,95,252,.05);}
-.sring.md{border-color:var(--b);background:rgba(59,130,246,.05);}
-.sring.lo{border-color:var(--border2);}
-.sn{font-size:16px;font-weight:800;line-height:1;}
-.sring.hi .sn{color:var(--p2);}
-.sring.md .sn{color:var(--b);}
-.sring.lo .sn{color:var(--muted);}
-.sl{font-size:9px;color:var(--muted);margin-top:1px;}
+.card-tags { padding: 0 16px 10px; display: flex; gap: 5px; flex-wrap: wrap; }
+.tag { padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #EDE9FE; color: #6D28D9; }
+.tag.g { background: var(--gn-bg); color: var(--gn); }
+.tag.a { background: var(--am-bg); color: var(--am); }
+.tag.r { background: var(--rd-bg); color: var(--rd); }
 
-/* tags */
-.card-tags{padding:0 16px 10px;display:flex;gap:5px;flex-wrap:wrap;}
-.tag{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:#EDE9FE;color:#6D28D9;}
-.tag.g{background:var(--green-bg);color:var(--green);}
-.tag.a{background:var(--amber-bg);color:var(--amber);}
-.tag.r{background:var(--red-bg);color:var(--red);}
+.metrics { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid var(--bd2); }
+.metric { padding: 10px 8px; text-align: center; border-right: 1px solid var(--bd2); }
+.metric:last-child { border-right: none; }
+.mv { font-size: 14px; font-weight: 700; }
+.mv.acc { color: var(--p2); }
+.mk { font-size: 10px; color: var(--t3); margin-top: 2px; }
 
-/* metrics */
-.metrics{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border2);}
-.metric{padding:10px 8px;text-align:center;border-right:1px solid var(--border2);}
-.metric:last-child{border-right:none;}
-.mv{font-size:14px;font-weight:700;color:var(--text);}
-.mv.acc{color:var(--p2);}
-.mk{font-size:10px;color:var(--muted);margin-top:2px;}
+.stab { padding: 14px 16px; border-top: 1px solid var(--bd2); }
+.stab-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.stab-ttl { font-size: 10px; font-weight: 600; color: var(--t3); letter-spacing: .05em; text-transform: uppercase; }
+.sbadge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.sbadge.stable { background: var(--gn-bg); color: var(--gn); }
+.sbadge.unstable { background: var(--am-bg); color: var(--am); }
+.sbadge.spike { background: var(--rd-bg); color: var(--rd); }
+.sbadge.nodata { background: #F3F4F6; color: var(--t3); }
 
-/* stability */
-.stab{padding:14px 16px;border-top:1px solid var(--border2);}
-.stab-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.stab-ttl{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;}
-.sbadge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
-.sbadge.stable{background:var(--green-bg);color:var(--green);}
-.sbadge.unstable{background:var(--amber-bg);color:var(--amber);}
-.sbadge.spike{background:var(--red-bg);color:var(--red);}
-.sbadge.nodata{background:#F3F4F6;color:var(--muted);}
+.bars { display: flex; align-items: flex-end; gap: 3px; height: 44px; margin-bottom: 10px; }
+.bc { flex: 1; display: flex; align-items: flex-end; height: 100%; }
+.bf { width: 100%; border-radius: 3px 3px 0 0; min-height: 3px; }
+.bf.n { background: var(--p2); opacity: .6; }
+.bf.s { background: var(--rd); opacity: .9; outline: 2px solid var(--rd); outline-offset: 1px; border-radius: 3px; }
+.bf.u { background: #F59E0B; opacity: .65; }
 
-/* bars */
-.bars{display:flex;align-items:flex-end;gap:3px;height:44px;margin-bottom:10px;}
-.bc{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
-.bf{width:100%;border-radius:3px 3px 0 0;min-height:3px;}
-.bf.n{background:var(--p2);opacity:.6;}
-.bf.s{background:var(--red);opacity:.9;outline:2px solid var(--red);outline-offset:1px;border-radius:3px;}
-.bf.u{background:#F59E0B;opacity:.65;}
+.stab-nums { display: grid; grid-template-columns: repeat(3,1fr); }
+.sni { text-align: center; padding: 6px 4px 0; border-right: 1px solid var(--bd2); }
+.sni:last-child { border-right: none; }
+.sv { font-size: 13px; font-weight: 700; }
+.sv.acc { color: var(--p2); }
+.sk { font-size: 10px; color: var(--t3); margin-top: 1px; }
+.spike-alert { margin-top: 8px; padding: 6px 10px; border-radius: 6px; background: var(--rd-bg); border: 1px solid rgba(220,38,38,.15); font-size: 11px; color: var(--rd); line-height: 1.5; }
 
-.stab-nums{display:grid;grid-template-columns:repeat(3,1fr);}
-.sni{text-align:center;padding:6px 4px 0;border-right:1px solid var(--border2);}
-.sni:last-child{border-right:none;}
-.sv{font-size:13px;font-weight:700;color:var(--text);}
-.sv.acc{color:var(--p2);}
-.sk{font-size:10px;color:var(--muted);margin-top:1px;}
-.spike-alert{margin-top:8px;padding:6px 10px;border-radius:6px;background:var(--red-bg);border:1px solid rgba(220,38,38,.15);font-size:11px;color:var(--red);line-height:1.5;}
+.shorts { padding: 12px 16px 14px; border-top: 1px solid var(--bd2); flex: 1; }
+.shorts-ttl { font-size: 10px; font-weight: 600; color: var(--t3); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 8px; }
+.srow { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--bd2); }
+.srow:last-child { border-bottom: none; }
+.sttl { font-size: 12px; color: var(--t2); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sttl.sp { color: var(--rd); }
+.svw { font-size: 11px; font-weight: 600; color: var(--p2); white-space: nowrap; }
+.svw.sp { color: var(--rd); }
 
-/* shorts list */
-.shorts{padding:12px 16px 14px;border-top:1px solid var(--border2);flex:1;}
-.shorts-ttl{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;}
-.srow{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border2);}
-.srow:last-child{border-bottom:none;}
-.sttl{font-size:12px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.sttl.sp{color:var(--red);}
-.svw{font-size:11px;font-weight:600;color:var(--p2);white-space:nowrap;flex-shrink:0;}
-.svw.sp{color:var(--red);}
+.card-foot { padding: 12px 16px; border-top: 1px solid var(--bd2); display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; }
+.btn-yt { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: var(--rs); background: #FF0000; color: #fff; border: none; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; transition: opacity .15s; }
+.btn-yt:hover { opacity: .88; }
+.btn-bm { padding: 7px 12px; border-radius: var(--rs); border: 1.5px solid var(--bd2); background: var(--card); color: var(--t3); font-size: 12px; cursor: pointer; transition: all .15s; }
+.btn-bm:hover { border-color: var(--p2); color: var(--p2); }
+.btn-bm.saved { border-color: var(--p2); color: var(--p2); background: #EDE9FE; }
 
-/* card foot */
-.card-foot{padding:12px 16px;border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;}
-.btn-yt{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--rs);background:#FF0000;color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity .15s;}
-.btn-yt:hover{opacity:.88;}
-.btn-bm{padding:7px 12px;border-radius:var(--rs);border:1.5px solid var(--border2);background:var(--surface);color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;}
-.btn-bm:hover{border-color:var(--p2);color:var(--p2);}
-.btn-bm.saved{border-color:var(--p2);color:var(--p2);background:#EDE9FE;}
-
-@media(max-width:768px){.topbar,.api-bar,.main{padding-left:16px;padding-right:16px;}.stat-strip{grid-template-columns:repeat(2,1fr);}.grid{grid-template-columns:1fr;}.hero{flex-direction:column;}}
+@media (max-width: 768px) {
+  .topbar, .api-bar, .main { padding-left: 16px; padding-right: 16px; }
+  .stats { grid-template-columns: repeat(2,1fr); }
+  .grid { grid-template-columns: 1fr; }
+  .hero { flex-direction: column; }
+}
 </style>
 </head>
 <body>
@@ -186,19 +178,22 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo',system-ui,sans-serif;backg
     <div class="brand-mark">33</div>
     <div class="brand-name">쇼츠 레이더</div>
   </a>
-  <span class="scan-time" id="scan-time"></span>
+  <span id="scan-time"></span>
 </header>
 
 <div class="api-bar">
-  <div class="api-lbl"><div class="api-dot" id="api-dot"></div>YouTube API 키</div>
-  <input class="api-input" id="api-input" type="password" placeholder="AIzaSy... 붙여넣기" autocomplete="off"/>
-  <button class="btn-api" onclick="saveKey()">저장</button>
-  <span class="api-hint" id="api-hint">키를 저장해야 스캔이 시작돼요</span>
+  <div class="api-lbl">
+    <div class="api-dot" id="api-dot"></div>
+    YouTube API 키
+  </div>
+  <input class="api-input" id="api-input" type="password" placeholder="AIzaSy... 붙여넣기" autocomplete="off" />
+  <button class="btn-save" id="btn-save" onclick="saveKey()">저장</button>
+  <span id="api-hint">키를 저장해야 스캔이 시작돼요</span>
 </div>
 
 <main class="main">
   <div class="hero">
-    <div class="hero-text">
+    <div class="hero-t">
       <div class="hero-title">임대인이 찾는 <em>쇼츠 채널</em>을 자동으로 발굴해요</div>
       <div class="hero-desc">34개 키워드 자동 스캔 · 조회수 안정성 분석 · 컨택 가능 채널 자동 판별</div>
     </div>
@@ -208,33 +203,36 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo',system-ui,sans-serif;backg
     </button>
   </div>
 
-  <div class="prog-card" id="prog-card">
-    <div class="prog-label"><div class="spinner"></div><span id="prog-text">준비 중...</span></div>
+  <div class="prog" id="prog">
+    <div class="prog-lbl">
+      <div class="spin"></div>
+      <span id="prog-text">준비 중...</span>
+    </div>
     <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
     <div class="prog-sub" id="prog-sub">잠시만 기다려주세요</div>
   </div>
 
-  <div class="stat-strip" id="stats" style="display:none">
-    <div class="stat-tile"><div class="stat-n" id="s-total">0</div><div class="stat-l">발굴된 채널</div></div>
-    <div class="stat-tile hi"><div class="stat-n" id="s-contact">0</div><div class="stat-l">컨택 가능</div></div>
-    <div class="stat-tile"><div class="stat-n" id="s-shorts">0</div><div class="stat-l">쇼츠 활성</div></div>
-    <div class="stat-tile"><div class="stat-n" id="s-rising">0</div><div class="stat-l">라이징 (5만↓)</div></div>
+  <div class="stats" id="stats">
+    <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">발굴된 채널</div></div>
+    <div class="stat hi"><div class="stat-n" id="s-contact">0</div><div class="stat-l">컨택 가능</div></div>
+    <div class="stat"><div class="stat-n" id="s-shorts">0</div><div class="stat-l">쇼츠 활성</div></div>
+    <div class="stat"><div class="stat-n" id="s-rising">0</div><div class="stat-l">라이징 (5만↓)</div></div>
   </div>
 
-  <div class="toolbar" id="toolbar" style="display:none">
-    <div class="chip active" onclick="setCat(this,'all')" data-cat="all">전체</div>
-    <div class="chip" onclick="setCat(this,'repair')"    data-cat="repair">🔧 수리·유지보수</div>
-    <div class="chip" onclick="setCat(this,'law')"       data-cat="law">⚖️ 임대·법률</div>
-    <div class="chip" onclick="setCat(this,'invest')"    data-cat="invest">💰 재테크</div>
+  <div class="toolbar" id="toolbar">
+    <div class="chip on" onclick="setCat(this,'all')" data-cat="all">전체</div>
+    <div class="chip" onclick="setCat(this,'repair')" data-cat="repair">🔧 수리·유지보수</div>
+    <div class="chip" onclick="setCat(this,'law')" data-cat="law">⚖️ 임대·법률</div>
+    <div class="chip" onclick="setCat(this,'invest')" data-cat="invest">💰 재테크</div>
     <div class="chip" onclick="setCat(this,'shortterm')" data-cat="shortterm">🏨 단기임대</div>
-    <div class="chip" onclick="setCat(this,'interior')"  data-cat="interior">🛋 인테리어</div>
-    <div class="chip" onclick="setCat(this,'tax')"       data-cat="tax">🧾 세금·절세</div>
+    <div class="chip" onclick="setCat(this,'interior')" data-cat="interior">🛋 인테리어</div>
+    <div class="chip" onclick="setCat(this,'tax')" data-cat="tax">🧾 세금·절세</div>
     <div class="chip" onclick="setCat(this,'bookmarked')" data-cat="bookmarked">⭐ 북마크</div>
-    <div class="tsep"></div>
+    <div class="sep"></div>
     <span class="slbl">정렬</span>
-    <div class="chip active" onclick="setSort(this,'score')"  data-sort="score">적합도순</div>
+    <div class="chip on" onclick="setSort(this,'score')" data-sort="score">적합도순</div>
     <div class="chip" onclick="setSort(this,'median')" data-sort="median">중앙값순</div>
-    <div class="chip" onclick="setSort(this,'subs')"   data-sort="subs">구독자순</div>
+    <div class="chip" onclick="setSort(this,'subs')" data-sort="subs">구독자순</div>
   </div>
 
   <div class="grid" id="grid">
@@ -247,7 +245,7 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo',system-ui,sans-serif;backg
 </main>
 
 <script>
-const KWS=[
+var KWS = [
   {kw:'누수 수리 셀프',cat:'repair'},{kw:'배관 막힘 해결',cat:'repair'},
   {kw:'도배 셀프 쇼츠',cat:'repair'},{kw:'보일러 고장 수리',cat:'repair'},
   {kw:'곰팡이 제거 방법',cat:'repair'},{kw:'전기 콘센트 교체',cat:'repair'},
@@ -265,176 +263,368 @@ const KWS=[
   {kw:'원룸 인테리어 쇼츠',cat:'interior'},{kw:'소형평수 리모델링',cat:'interior'},
   {kw:'셀프인테리어 저렴하게',cat:'interior'},{kw:'임대용 인테리어',cat:'interior'},
   {kw:'임대소득세 신고',cat:'tax'},{kw:'임대사업자 절세',cat:'tax'},
-  {kw:'종부세 임대인',cat:'tax'},{kw:'부동산 양도세 줄이기',cat:'tax'},
+  {kw:'종부세 임대인',cat:'tax'},{kw:'부동산 양도세 줄이기',cat:'tax'}
 ];
-const CAT={repair:'집 수리·유지보수',law:'임대·법률',invest:'부동산 재테크',shortterm:'단기임대·숙박',interior:'공간 인테리어',tax:'세금·절세'};
 
-let apiKey='', channels=[], bookmarks=new Set(JSON.parse(localStorage.getItem('33bm')||'[]'));
-let activeCat='all', activeSort='score', scanning=false;
+var CAT = {
+  repair:'집 수리·유지보수', law:'임대·법률', invest:'부동산 재테크',
+  shortterm:'단기임대·숙박', interior:'공간 인테리어', tax:'세금·절세'
+};
 
-function saveKey(){
-  const v=document.getElementById('api-input').value.trim(); if(!v) return;
-  apiKey=v;
+var apiKey = '';
+var channels = [];
+var bookmarks = new Set(JSON.parse(localStorage.getItem('33bm') || '[]'));
+var activeCat = 'all';
+var activeSort = 'score';
+var scanning = false;
+
+function saveKey() {
+  var v = document.getElementById('api-input').value.trim();
+  if (!v) return;
+  apiKey = v;
   document.getElementById('api-dot').classList.add('on');
-  document.getElementById('api-hint').textContent='✓ 저장됨 — 스캔 준비 완료';
-  document.getElementById('api-hint').style.color='var(--green)';
-  document.getElementById('scan-btn').disabled=false;
+  document.getElementById('api-hint').textContent = '✓ 저장됨 — 스캔 준비 완료';
+  document.getElementById('api-hint').style.color = '#059669';
+  document.getElementById('scan-btn').disabled = false;
 }
-document.getElementById('api-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveKey();});
 
-async function startScan(){
-  if(!apiKey||scanning) return;
-  scanning=true; channels=[];
-  const seen=new Set();
+document.getElementById('api-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') saveKey();
+});
+
+function startScan() {
+  if (!apiKey || scanning) return;
+  scanning = true;
+  channels = [];
+  var seen = new Set();
   setScanUI(true);
-  document.getElementById('prog-card').style.display='block';
+  document.getElementById('prog').style.display = 'block';
+  document.getElementById('stats').style.display = 'none';
+  document.getElementById('toolbar').style.display = 'none';
 
-  for(let i=0;i<KWS.length;i++){
-    setProg(i,KWS.length,`"${KWS[i].kw}" 검색 중...`,`키워드 ${i+1} / ${KWS.length}`);
-    try{
-      const res=await searchChs(KWS[i].kw,KWS[i].cat);
-      res.forEach(ch=>{if(!seen.has(ch.id)){seen.add(ch.id);channels.push(ch);}});
-    }catch(e){if(e.message==='quota')break;}
-    await sleep(120);
+  var i = 0;
+  function nextKw() {
+    if (i >= KWS.length) {
+      enrichAll(channels.slice(0, 40), 0);
+      return;
+    }
+    setProg(i, KWS.length, '"' + KWS[i].kw + '" 검색 중...', '키워드 ' + (i+1) + ' / ' + KWS.length);
+    searchChs(KWS[i].kw, KWS[i].cat).then(function(res) {
+      res.forEach(function(ch) {
+        if (!seen.has(ch.id)) { seen.add(ch.id); channels.push(ch); }
+      });
+    }).catch(function() {}).finally(function() {
+      i++;
+      setTimeout(nextKw, 130);
+    });
   }
+  nextKw();
+}
 
-  setProg(KWS.length,KWS.length,'채널 상세 분석 중...','조회수 안정성 계산');
-  const top=channels.slice(0,40);
-  for(let i=0;i<top.length;i++){
-    try{await enrich(top[i]);}catch(e){}
-    if(i%4===0) setProg(KWS.length,KWS.length,`분석 중... (${i+1}/${top.length})`,'쇼츠 조회수 데이터 수집');
-    await sleep(100);
+function enrichAll(list, idx) {
+  if (idx >= list.length) {
+    finishScan();
+    return;
   }
+  setProg(KWS.length, KWS.length, '분석 중... (' + (idx+1) + '/' + list.length + ')', '쇼츠 조회수 데이터 수집');
+  enrich(list[idx]).catch(function() {}).finally(function() {
+    setTimeout(function() { enrichAll(list, idx+1); }, 110);
+  });
+}
 
-  channels.forEach(ch=>{ch.score=calcScore(ch);});
-  channels.sort((a,b)=>b.score-a.score);
-  scanning=false;
+function finishScan() {
+  channels.forEach(function(ch) { ch.score = calcScore(ch); });
+  channels.sort(function(a,b) { return b.score - a.score; });
+  scanning = false;
   setScanUI(false);
-  document.getElementById('prog-card').style.display='none';
-  document.getElementById('scan-time').textContent=`스캔 완료 ${now()} · ${channels.length}개 채널`;
+  document.getElementById('prog').style.display = 'none';
+  var t = new Date().toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'});
+  document.getElementById('scan-time').textContent = '스캔 완료 ' + t + ' · ' + channels.length + '개 채널';
   renderAll();
 }
 
-async function searchChs(q,cat){
-  const r=await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&type=channel&maxResults=5&regionCode=KR&relevanceLanguage=ko&key=${apiKey}`);
-  if(!r.ok){const e=await r.json();if(e.error?.code===403)throw new Error('quota');throw new Error('api');}
-  const d=await r.json();
-  return(d.items||[]).map(it=>({id:it.snippet.channelId,name:it.snippet.channelTitle,desc:it.snippet.description||'',thumb:it.snippet.thumbnails?.default?.url||'',cat,cats:[cat],subs:null,viewAvg:null,shortsCount:0,totalVideos:0,recentShorts:[],viewStability:null,score:0,handle:''}));
+function searchChs(q, cat) {
+  var url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + encodeURIComponent(q) + '&type=channel&maxResults=5&regionCode=KR&relevanceLanguage=ko&key=' + apiKey;
+  return fetch(url).then(function(r) {
+    if (!r.ok) throw new Error('api');
+    return r.json();
+  }).then(function(d) {
+    return (d.items || []).map(function(it) {
+      return {
+        id: it.snippet.channelId, name: it.snippet.channelTitle,
+        desc: it.snippet.description || '', thumb: it.snippet.thumbnails && it.snippet.thumbnails.default ? it.snippet.thumbnails.default.url : '',
+        cat: cat, cats: [cat], subs: null, viewAvg: null, shortsCount: 0,
+        totalVideos: 0, recentShorts: [], viewStability: null, score: 0, handle: ''
+      };
+    });
+  });
 }
 
-async function enrich(ch){
-  const r=await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&id=${ch.id}&key=${apiKey}`);
-  if(!r.ok) return;
-  const d=await r.json(); const it=d.items?.[0]; if(!it) return;
-  const st=it.statistics||{};
-  ch.subs=parseInt(st.subscriberCount||0);
-  ch.totalVideos=parseInt(st.videoCount||0);
-  ch.viewTotal=parseInt(st.viewCount||0);
-  ch.viewAvg=ch.totalVideos>0?Math.round(ch.viewTotal/ch.totalVideos):0;
-  ch.thumb=it.snippet?.thumbnails?.medium?.url||ch.thumb;
-  ch.handle=it.snippet?.customUrl||'';
-  await sleep(60);
-  const vr=await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${ch.id}&q=%23shorts&type=video&maxResults=10&order=date&key=${apiKey}`);
-  if(!vr.ok) return;
-  const vd=await vr.json(); const items=vd.items||[]; ch.shortsCount=items.length;
-  if(!items.length) return;
-  const ids=items.map(v=>v.id?.videoId).filter(Boolean).join(','); if(!ids) return;
-  await sleep(60);
-  const sr=await fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${ids}&key=${apiKey}`);
-  if(!sr.ok) return;
-  const sd=await sr.json();
-  ch.recentShorts=(sd.items||[]).map(v=>({title:v.snippet?.title||'',id:v.id,views:parseInt(v.statistics?.viewCount||0)}));
-  ch.viewStability=calcStab(ch.recentShorts.map(s=>s.views));
+function enrich(ch) {
+  var url1 = 'https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&id=' + ch.id + '&key=' + apiKey;
+  return fetch(url1).then(function(r) {
+    if (!r.ok) throw new Error('api');
+    return r.json();
+  }).then(function(d) {
+    var it = d.items && d.items[0];
+    if (!it) return;
+    var st = it.statistics || {};
+    ch.subs = parseInt(st.subscriberCount || 0);
+    ch.totalVideos = parseInt(st.videoCount || 0);
+    ch.viewTotal = parseInt(st.viewCount || 0);
+    ch.viewAvg = ch.totalVideos > 0 ? Math.round(ch.viewTotal / ch.totalVideos) : 0;
+    if (it.snippet && it.snippet.thumbnails && it.snippet.thumbnails.medium) ch.thumb = it.snippet.thumbnails.medium.url;
+    ch.handle = (it.snippet && it.snippet.customUrl) || '';
+
+    return new Promise(function(res) { setTimeout(res, 60); });
+  }).then(function() {
+    var url2 = 'https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=' + ch.id + '&q=%23shorts&type=video&maxResults=10&order=date&key=' + apiKey;
+    return fetch(url2);
+  }).then(function(r) {
+    if (!r.ok) throw new Error('api');
+    return r.json();
+  }).then(function(vd) {
+    var items = vd.items || [];
+    ch.shortsCount = items.length;
+    if (!items.length) return;
+    var ids = items.map(function(v) { return v.id && v.id.videoId; }).filter(Boolean).join(',');
+    if (!ids) return;
+    return new Promise(function(res) { setTimeout(res, 60); }).then(function() {
+      return fetch('https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=' + ids + '&key=' + apiKey);
+    });
+  }).then(function(r) {
+    if (!r || !r.ok) return;
+    return r.json();
+  }).then(function(sd) {
+    if (!sd) return;
+    ch.recentShorts = (sd.items || []).map(function(v) {
+      return {
+        title: (v.snippet && v.snippet.title) || '',
+        id: v.id,
+        views: parseInt((v.statistics && v.statistics.viewCount) || 0)
+      };
+    });
+    ch.viewStability = calcStab(ch.recentShorts.map(function(s) { return s.views; }));
+  });
 }
 
-function calcStab(views){
-  const vs=views.filter(v=>v!=null&&!isNaN(v)); if(vs.length<3) return null;
-  const sorted=[...vs].sort((a,b)=>a-b); const n=sorted.length;
-  const median=n%2===0?(sorted[n/2-1]+sorted[n/2])/2:sorted[Math.floor(n/2)];
-  const avg=vs.reduce((s,v)=>s+v,0)/n;
-  const botQ=sorted.slice(0,Math.max(1,Math.floor(n*.25)));
-  const botAvg=botQ.reduce((s,v)=>s+v,0)/botQ.length;
-  const spikes=vs.filter(v=>v>median*5&&v>50000);
-  const stabR=avg>0?median/avg:0;
-  let grade,reason;
-  if(median>=10000&&stabR>=.35&&botAvg>=3000){grade='stable';reason='안정적';}
-  else if(spikes.length>=1&&stabR<.25){grade='spike';reason='스파이크 의심';}
-  else if(median>=7000&&stabR>=.25){grade='stable';reason='안정적';}
-  else if(median>=3000){grade='unstable';reason='불안정';}
-  else{grade='spike';reason='기준 미달';}
-  return{views:vs,median,avg,botAvg,spikes,stabR,grade,reason,contactable:grade==='stable'&&median>=10000};
+function calcStab(views) {
+  var vs = views.filter(function(v) { return v != null && !isNaN(v); });
+  if (vs.length < 3) return null;
+  var sorted = vs.slice().sort(function(a,b) { return a-b; });
+  var n = sorted.length;
+  var median = n % 2 === 0 ? (sorted[n/2-1] + sorted[n/2]) / 2 : sorted[Math.floor(n/2)];
+  var avg = vs.reduce(function(s,v) { return s+v; }, 0) / n;
+  var botQ = sorted.slice(0, Math.max(1, Math.floor(n * 0.25)));
+  var botAvg = botQ.reduce(function(s,v) { return s+v; }, 0) / botQ.length;
+  var spikes = vs.filter(function(v) { return v > median * 5 && v > 50000; });
+  var stabR = avg > 0 ? median / avg : 0;
+  var grade, reason;
+  if (median >= 10000 && stabR >= 0.35 && botAvg >= 3000) { grade = 'stable'; reason = '안정적'; }
+  else if (spikes.length >= 1 && stabR < 0.25) { grade = 'spike'; reason = '스파이크 의심'; }
+  else if (median >= 7000 && stabR >= 0.25) { grade = 'stable'; reason = '안정적'; }
+  else if (median >= 3000) { grade = 'unstable'; reason = '불안정'; }
+  else { grade = 'spike'; reason = '기준 미달'; }
+  var contactable = grade === 'stable' && median >= 10000;
+  return { views: vs, median: median, avg: avg, botAvg: botAvg, spikes: spikes, stabR: stabR, grade: grade, reason: reason, contactable: contactable };
 }
 
-function calcScore(ch){
-  let s=0;
-  const nd=(ch.name+' '+ch.desc).toLowerCase();
-  const kws={repair:['누수','배관','수리','셀프','보일러','도배','전기','리모델링'],law:['임대','임대인','임차인','계약','법률','세입자','전세','보증금','부동산'],invest:['투자','수익','재테크','공실','월세','아파트','오피스텔'],shortterm:['에어비앤비','단기','숙박','게스트','airbnb'],interior:['인테리어','원룸','소형','꾸미기','리모델링'],tax:['세금','절세','소득세','종부세','임대사업자','세무']};
-  let hits=0; Object.values(kws).forEach(ws=>ws.forEach(w=>{if(nd.includes(w))hits++;}));
-  s+=Math.min(40,hits*5);
-  const sub=ch.subs||0;
-  if(sub>=5000&&sub<30000)s+=20; else if(sub>=30000&&sub<200000)s+=18; else if(sub>=200000&&sub<1000000)s+=14; else if(sub>=1000)s+=8;
-  if(ch.shortsCount>=2)s+=15; else if(ch.shortsCount===1)s+=8;
-  const st=ch.viewStability;
-  if(st){
-    if(st.grade==='stable'&&st.median>=10000)s+=25; else if(st.grade==='stable'&&st.median>=7000)s+=18; else if(st.grade==='unstable')s+=8;
-    if(st.median>=10000)s+=15; else if(st.median>=5000)s+=8; else if(st.median>=2000)s+=3;
+function calcScore(ch) {
+  var s = 0;
+  var nd = (ch.name + ' ' + ch.desc).toLowerCase();
+  var kws = {
+    repair: ['누수','배관','수리','셀프','보일러','도배','전기','리모델링'],
+    law: ['임대','임대인','임차인','계약','법률','세입자','전세','보증금','부동산'],
+    invest: ['투자','수익','재테크','공실','월세','아파트','오피스텔'],
+    shortterm: ['에어비앤비','단기','숙박','게스트','airbnb'],
+    interior: ['인테리어','원룸','소형','꾸미기','리모델링'],
+    tax: ['세금','절세','소득세','종부세','임대사업자','세무']
+  };
+  var hits = 0;
+  Object.keys(kws).forEach(function(k) {
+    kws[k].forEach(function(w) { if (nd.indexOf(w) !== -1) hits++; });
+  });
+  s += Math.min(40, hits * 5);
+  var sub = ch.subs || 0;
+  if (sub >= 5000 && sub < 30000) s += 20;
+  else if (sub >= 30000 && sub < 200000) s += 18;
+  else if (sub >= 200000 && sub < 1000000) s += 14;
+  else if (sub >= 1000) s += 8;
+  if (ch.shortsCount >= 2) s += 15;
+  else if (ch.shortsCount === 1) s += 8;
+  var st = ch.viewStability;
+  if (st) {
+    if (st.grade === 'stable' && st.median >= 10000) s += 25;
+    else if (st.grade === 'stable' && st.median >= 7000) s += 18;
+    else if (st.grade === 'unstable') s += 8;
+    if (st.median >= 10000) s += 15;
+    else if (st.median >= 5000) s += 8;
+    else if (st.median >= 2000) s += 3;
   }
-  return Math.min(100,s);
+  return Math.min(100, s);
 }
 
-function renderAll(){
-  let data=[...channels];
-  if(activeCat==='bookmarked') data=data.filter(c=>bookmarks.has(c.id));
-  else if(activeCat!=='all') data=data.filter(c=>c.cats.includes(activeCat));
-  if(activeSort==='subs') data.sort((a,b)=>(b.subs||0)-(a.subs||0));
-  else if(activeSort==='median') data.sort((a,b)=>(b.viewStability?.median||0)-(a.viewStability?.median||0));
-  else data.sort((a,b)=>b.score-a.score);
+function renderAll() {
+  var data = channels.slice();
+  if (activeCat === 'bookmarked') data = data.filter(function(c) { return bookmarks.has(c.id); });
+  else if (activeCat !== 'all') data = data.filter(function(c) { return c.cats.indexOf(activeCat) !== -1; });
+  if (activeSort === 'subs') data.sort(function(a,b) { return (b.subs||0)-(a.subs||0); });
+  else if (activeSort === 'median') data.sort(function(a,b) { return ((b.viewStability&&b.viewStability.median)||0)-((a.viewStability&&a.viewStability.median)||0); });
+  else data.sort(function(a,b) { return b.score-a.score; });
 
-  document.getElementById('stats').style.display='grid';
-  document.getElementById('toolbar').style.display='flex';
-  document.getElementById('s-total').textContent=channels.length;
-  document.getElementById('s-contact').textContent=channels.filter(c=>c.viewStability?.contactable).length;
-  document.getElementById('s-shorts').textContent=channels.filter(c=>c.shortsCount>0).length;
-  document.getElementById('s-rising').textContent=channels.filter(c=>c.subs>0&&c.subs<=50000).length;
+  document.getElementById('stats').style.display = 'grid';
+  document.getElementById('toolbar').style.display = 'flex';
+  document.getElementById('s-total').textContent = channels.length;
+  document.getElementById('s-contact').textContent = channels.filter(function(c) { return c.viewStability && c.viewStability.contactable; }).length;
+  document.getElementById('s-shorts').textContent = channels.filter(function(c) { return c.shortsCount > 0; }).length;
+  document.getElementById('s-rising').textContent = channels.filter(function(c) { return c.subs > 0 && c.subs <= 50000; }).length;
 
-  const grid=document.getElementById('grid');
-  if(!data.length){grid.innerHTML=`<div class="empty"><div class="empty-ico">🔍</div><h3>채널이 없어요</h3><p>다른 카테고리를 선택하거나 다시 스캔해보세요.</p></div>`;return;}
-  grid.innerHTML=data.map(c=>cardHTML(c)).join('');
+  var grid = document.getElementById('grid');
+  if (!data.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-ico">🔍</div><h3>채널이 없어요</h3><p>다른 카테고리를 선택하거나 다시 스캔해보세요.</p></div>';
+    return;
+  }
+  grid.innerHTML = data.map(cardHTML).join('');
 }
 
-function cardHTML(ch){
-  const st=ch.viewStability, ok=st?.contactable===true;
-  const sc=ch.score, ring=sc>=80?'hi':sc>=60?'md':'lo', sl=sc>=80?'고적합':sc>=60?'적합':'참고용';
-  const subT=ch.subs!=null?fmt(ch.subs)+'명':'—', medT=st?fmt(Math.round(st.median)):'—', avgT=ch.viewAvg?fmt(ch.viewAvg):'—';
-  const bm=bookmarks.has(ch.id);
-  const avEl=ch.thumb?`<img class="avatar" src="${esc(ch.thumb)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="avatar-ph" style="display:none">${ch.name.charAt(0)}</div>`:`<div class="avatar-ph">${ch.name.charAt(0)}</div>`;
-  const tags=[ch.cat?`<span class="tag">${CAT[ch.cat]||ch.cat}</span>`:'',ch.shortsCount>0?`<span class="tag g">쇼츠 활성</span>`:'',ch.subs>0&&ch.subs<=50000?`<span class="tag a">라이징</span>`:'',st?.grade==='spike'?`<span class="tag r">스파이크 주의</span>`:''].filter(Boolean).join('');
+function cardHTML(ch) {
+  var st = ch.viewStability;
+  var ok = st && st.contactable === true;
+  var sc = ch.score;
+  var ring = sc >= 80 ? 'hi' : sc >= 60 ? 'md' : 'lo';
+  var slabel = sc >= 80 ? '고적합' : sc >= 60 ? '적합' : '참고용';
+  var subT = ch.subs != null ? fmt(ch.subs) + '명' : '—';
+  var medT = st ? fmt(Math.round(st.median)) : '—';
+  var avgT = ch.viewAvg ? fmt(ch.viewAvg) : '—';
+  var bm = bookmarks.has(ch.id);
 
-  let stabHtml='';
-  if(st&&st.views.length>0){
-    const mx=Math.max(...st.views,1);
-    const bars=st.views.map(v=>{const h=Math.max(6,Math.round((v/mx)*100));const isSp=v>st.median*5&&v>50000;const cls=isSp?'s':st.grade==='stable'?'n':'u';return`<div class="bc"><div class="bf ${cls}" style="height:${h}%"></div></div>`;}).join('');
-    const spNote=st.spikes.length>0?`<div class="spike-alert">⚠ 알고리즘 뻥튀기 ${st.spikes.length}건 감지 — 평균을 왜곡하는 영상이 있어요. 컨택 비추천.</div>`:'';
-    stabHtml=`<div class="stab"><div class="stab-head"><span class="stab-ttl">쇼츠 조회수 분포 (${st.views.length}개)</span><span class="sbadge ${st.grade}">${st.grade==='stable'?'✓':st.grade==='spike'?'⚠':'△'} ${st.reason}</span></div><div class="bars">${bars}</div>${spNote}<div class="stab-nums"><div class="sni"><div class="sv${st.median>=10000?' acc':''}">${fmt(Math.round(st.median))}</div><div class="sk">중앙값</div></div><div class="sni"><div class="sv">${fmt(Math.round(st.avg))}</div><div class="sk">평균</div></div><div class="sni"><div class="sv">${fmt(Math.round(st.botAvg))}</div><div class="sk">하위 25%</div></div></div></div>`;
-  }else{
-    stabHtml=`<div class="stab"><div class="stab-head"><span class="stab-ttl">쇼츠 조회수 분포</span><span class="sbadge nodata">— 데이터 없음</span></div><div style="font-size:12px;color:var(--muted)">쇼츠 업로드가 부족한 채널이에요.</div></div>`;
+  var avEl = ch.thumb
+    ? '<img class="avatar" src="' + esc(ch.thumb) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">' +
+      '<div class="avatar-ph" style="display:none">' + ch.name.charAt(0) + '</div>'
+    : '<div class="avatar-ph">' + ch.name.charAt(0) + '</div>';
+
+  var tagList = [];
+  if (ch.cat) tagList.push('<span class="tag">' + (CAT[ch.cat] || ch.cat) + '</span>');
+  if (ch.shortsCount > 0) tagList.push('<span class="tag g">쇼츠 활성</span>');
+  if (ch.subs > 0 && ch.subs <= 50000) tagList.push('<span class="tag a">라이징</span>');
+  if (st && st.grade === 'spike') tagList.push('<span class="tag r">스파이크 주의</span>');
+  var tags = tagList.join('');
+
+  var stabHtml = '';
+  if (st && st.views.length > 0) {
+    var mx = Math.max.apply(null, st.views.concat([1]));
+    var barsHtml = st.views.map(function(v) {
+      var h = Math.max(6, Math.round((v / mx) * 100));
+      var isSp = v > st.median * 5 && v > 50000;
+      var cls = isSp ? 's' : st.grade === 'stable' ? 'n' : 'u';
+      return '<div class="bc"><div class="bf ' + cls + '" style="height:' + h + '%"></div></div>';
+    }).join('');
+    var spNote = st.spikes.length > 0
+      ? '<div class="spike-alert">⚠ 알고리즘 뻥튀기 ' + st.spikes.length + '건 감지 — 평균을 왜곡하는 영상이 있어요. 컨택 비추천.</div>'
+      : '';
+    var accMed = st.median >= 10000 ? ' acc' : '';
+    stabHtml = '<div class="stab">' +
+      '<div class="stab-head"><span class="stab-ttl">쇼츠 조회수 분포 (' + st.views.length + '개)</span>' +
+      '<span class="sbadge ' + st.grade + '">' + (st.grade === 'stable' ? '✓' : st.grade === 'spike' ? '⚠' : '△') + ' ' + st.reason + '</span></div>' +
+      '<div class="bars">' + barsHtml + '</div>' + spNote +
+      '<div class="stab-nums">' +
+      '<div class="sni"><div class="sv' + accMed + '">' + fmt(Math.round(st.median)) + '</div><div class="sk">중앙값</div></div>' +
+      '<div class="sni"><div class="sv">' + fmt(Math.round(st.avg)) + '</div><div class="sk">평균</div></div>' +
+      '<div class="sni"><div class="sv">' + fmt(Math.round(st.botAvg)) + '</div><div class="sk">하위 25%</div></div>' +
+      '</div></div>';
+  } else {
+    stabHtml = '<div class="stab"><div class="stab-head"><span class="stab-ttl">쇼츠 조회수 분포</span><span class="sbadge nodata">— 데이터 없음</span></div>' +
+      '<div style="font-size:12px;color:var(--t3)">쇼츠 업로드가 부족한 채널이에요.</div></div>';
   }
 
-  const shortRows=ch.recentShorts.length>0?ch.recentShorts.slice(0,3).map(s=>{const isSp=st&&s.views>st.median*5&&s.views>50000;return`<div class="srow"><span class="sttl${isSp?' sp':''}">${esc(s.title)}</span><span class="svw${isSp?' sp':''}">${fmt(s.views)}회${isSp?' ⚠':''}</span></div>`;}).join(''):`<div style="font-size:12px;color:var(--muted)">최근 쇼츠 없음</div>`;
+  var shortRows = '';
+  if (ch.recentShorts.length > 0) {
+    shortRows = ch.recentShorts.slice(0,3).map(function(s) {
+      var isSp = st && s.views > st.median * 5 && s.views > 50000;
+      return '<div class="srow">' +
+        '<span class="sttl' + (isSp ? ' sp' : '') + '">' + esc(s.title) + '</span>' +
+        '<span class="svw' + (isSp ? ' sp' : '') + '">' + fmt(s.views) + '회' + (isSp ? ' ⚠' : '') + '</span>' +
+        '</div>';
+    }).join('');
+  } else {
+    shortRows = '<div style="font-size:12px;color:var(--t3)">최근 쇼츠 없음</div>';
+  }
 
-  return`<div class="card${ok?' ok':''}" id="card-${ch.id}"><div class="card-accent"></div><div class="card-head">${avEl}<div class="ch-info"><div class="ch-name"><span class="ch-name-t" title="${esc(ch.name)}">${esc(ch.name)}</span>${ok?`<span class="badge-ok">✓ 컨택 가능</span>`:''}</div><div class="ch-handle">${ch.handle?'@'+ch.handle.replace('@',''):ch.id.slice(0,14)+'…'}</div></div><div class="sring ${ring}"><div class="sn">${sc}</div><div class="sl">${sl}</div></div></div><div class="card-tags">${tags}</div><div class="metrics"><div class="metric"><div class="mv">${subT}</div><div class="mk">구독자</div></div><div class="metric"><div class="mv${st&&st.median>=10000?' acc':''}">${medT}</div><div class="mk">쇼츠 중앙값</div></div><div class="metric"><div class="mv">${avgT}</div><div class="mk">전체 평균</div></div></div>${stabHtml}<div class="shorts"><div class="shorts-ttl">최근 쇼츠</div>${shortRows}</div><div class="card-foot"><a class="btn-yt" href="https://youtube.com/channel/${ch.id}" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.75 15.5V8.5l6.25 3.5-6.25 3.5z"/></svg>유튜브에서 보기</a><button class="btn-bm${bm?' saved':''}" onclick="toggleBm('${ch.id}')" id="bm-${ch.id}">${bm?'★ 저장됨':'☆ 북마크'}</button></div></div>`;
+  var accMedM = st && st.median >= 10000 ? ' acc' : '';
+  var ytSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.75 15.5V8.5l6.25 3.5-6.25 3.5z"/></svg>';
+
+  return '<div class="card' + (ok ? ' ok' : '') + '" id="card-' + ch.id + '">' +
+    '<div class="card-top"></div>' +
+    '<div class="card-head">' + avEl +
+    '<div class="ch-info"><div class="ch-name"><span class="ch-name-t" title="' + esc(ch.name) + '">' + esc(ch.name) + '</span>' +
+    (ok ? '<span class="badge-ok">✓ 컨택 가능</span>' : '') + '</div>' +
+    '<div class="ch-handle">' + (ch.handle ? '@' + ch.handle.replace('@','') : ch.id.slice(0,14) + '…') + '</div></div>' +
+    '<div class="sring ' + ring + '"><div class="sn">' + sc + '</div><div class="sl">' + slabel + '</div></div></div>' +
+    '<div class="card-tags">' + tags + '</div>' +
+    '<div class="metrics">' +
+    '<div class="metric"><div class="mv">' + subT + '</div><div class="mk">구독자</div></div>' +
+    '<div class="metric"><div class="mv' + accMedM + '">' + medT + '</div><div class="mk">쇼츠 중앙값</div></div>' +
+    '<div class="metric"><div class="mv">' + avgT + '</div><div class="mk">전체 평균</div></div>' +
+    '</div>' + stabHtml +
+    '<div class="shorts"><div class="shorts-ttl">최근 쇼츠</div>' + shortRows + '</div>' +
+    '<div class="card-foot">' +
+    '<a class="btn-yt" href="https://youtube.com/channel/' + ch.id + '" target="_blank" rel="noopener">' + ytSvg + '유튜브에서 보기</a>' +
+    '<button class="btn-bm' + (bm ? ' saved' : '') + '" onclick="toggleBm(\'' + ch.id + '\')" id="bm-' + ch.id + '">' + (bm ? '★ 저장됨' : '☆ 북마크') + '</button>' +
+    '</div></div>';
 }
 
-function setCat(el,cat){document.querySelectorAll('[data-cat]').forEach(c=>c.classList.remove('active'));el.classList.add('active');activeCat=cat;if(channels.length)renderAll();}
-function setSort(el,key){document.querySelectorAll('[data-sort]').forEach(c=>c.classList.remove('active'));el.classList.add('active');activeSort=key;if(channels.length)renderAll();}
-function toggleBm(id){bookmarks.has(id)?bookmarks.delete(id):bookmarks.add(id);localStorage.setItem('33bm',JSON.stringify([...bookmarks]));const b=document.getElementById('bm-'+id);if(b){b.className='btn-bm'+(bookmarks.has(id)?' saved':'');b.textContent=bookmarks.has(id)?'★ 저장됨':'☆ 북마크';}}
+function setCat(el, cat) {
+  document.querySelectorAll('[data-cat]').forEach(function(c) { c.classList.remove('on'); });
+  el.classList.add('on');
+  activeCat = cat;
+  if (channels.length) renderAll();
+}
 
-function setScanUI(on){const btn=document.getElementById('scan-btn');btn.disabled=on;btn.innerHTML=on?`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 스캔 중...`:`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> 다시 스캔`;}
-function setProg(done,total,label,sub){const p=total>0?Math.round(done/total*100):0;document.getElementById('prog-fill').style.width=p+'%';document.getElementById('prog-text').textContent=label;document.getElementById('prog-sub').textContent=(sub||'')+(total>0?` (${done}/${total})`);}
-function fmt(n){if(n==null||isNaN(n))return'—';if(n>=10000)return(n/10000).toFixed(1).replace(/\.0$/,'')+'만';if(n>=1000)return(n/1000).toFixed(1).replace(/\.0$/,'')+'천';return String(n);}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
-function now(){return new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});}
+function setSort(el, key) {
+  document.querySelectorAll('[data-sort]').forEach(function(c) { c.classList.remove('on'); });
+  el.classList.add('on');
+  activeSort = key;
+  if (channels.length) renderAll();
+}
+
+function toggleBm(id) {
+  if (bookmarks.has(id)) bookmarks.delete(id);
+  else bookmarks.add(id);
+  localStorage.setItem('33bm', JSON.stringify(Array.from(bookmarks)));
+  var b = document.getElementById('bm-' + id);
+  if (b) {
+    b.className = 'btn-bm' + (bookmarks.has(id) ? ' saved' : '');
+    b.textContent = bookmarks.has(id) ? '★ 저장됨' : '☆ 북마크';
+  }
+}
+
+function setScanUI(on) {
+  var btn = document.getElementById('scan-btn');
+  btn.disabled = on;
+  if (on) {
+    btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 스캔 중...';
+  } else {
+    btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> 다시 스캔';
+  }
+}
+
+function setProg(done, total, label, sub) {
+  var p = total > 0 ? Math.round(done / total * 100) : 0;
+  document.getElementById('prog-fill').style.width = p + '%';
+  document.getElementById('prog-text').textContent = label;
+  document.getElementById('prog-sub').textContent = (sub || '') + (total > 0 ? ' (' + done + '/' + total + ')' : '');
+}
+
+function fmt(n) {
+  if (n == null || isNaN(n)) return '—';
+  if (n >= 10000) return (n / 10000).toFixed(1).replace(/\.0$/, '') + '만';
+  if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + '천';
+  return String(n);
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 </script>
 </body>
 </html>
