@@ -6,7 +6,621 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>삼삼 쇼츠 레이더</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style><!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>삼삼 쇼츠 레이더</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+:root{--p:#7C3AED;--p2:#895FFC;--b:#3B82F6;--grad:linear-gradient(135deg,#7C3AED 0%,#3B82F6 100%);--grad-s:linear-gradient(135deg,rgba(124,58,237,.07) 0%,rgba(59,130,246,.07) 100%);--bg:#F7F5FF;--card:#fff;--card2:#F9F8FF;--t1:#111827;--t2:#374151;--t3:#9CA3AF;--bd1:#EDE9FE;--bd2:#E5E7EB;--gn:#059669;--gn-bg:#ECFDF5;--am:#D97706;--am-bg:#FFFBEB;--rd:#DC2626;--rd-bg:#FEF2F2;--r:14px;--rs:8px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;}
+.topbar{position:sticky;top:0;z-index:100;height:56px;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd1);display:flex;align-items:center;justify-content:space-between;padding:0 28px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.brand-mark{width:32px;height:32px;border-radius:9px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;}
+.brand-name{font-size:16px;font-weight:800;color:var(--t1);}
+#scan-time{font-size:12px;color:var(--t3);}
+.api-bar{background:var(--card);border-bottom:1px solid var(--bd1);padding:10px 28px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.api-lbl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--p);white-space:nowrap;}
+.api-dot{width:7px;height:7px;border-radius:50%;background:#D1D5DB;}
+.api-dot.on{background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.2);}
+.api-input{flex:1;max-width:360px;padding:7px 12px;border:1.5px solid var(--bd1);border-radius:var(--rs);font-size:13px;font-family:monospace;background:var(--card2);color:var(--t1);outline:none;}
+.api-input:focus{border-color:var(--p2);box-shadow:0 0 0 3px rgba(137,95,252,.14);}
+.btn-save{padding:7px 16px;border-radius:var(--rs);background:var(--grad);color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.btn-save:hover{opacity:.88;}
+#api-hint{font-size:11px;color:var(--t3);}
+.main{max-width:1280px;margin:0 auto;padding:28px 28px 60px;}
+.hero{background:var(--grad-s);border:1px solid var(--bd1);border-radius:var(--r);padding:22px 26px;margin-bottom:22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.hero-t{flex:1;min-width:200px;}
+.hero-title{font-size:19px;font-weight:800;line-height:1.3;}
+.hero-title em{font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-desc{font-size:13px;color:var(--t3);margin-top:4px;line-height:1.6;}
+.btn-scan{display:flex;align-items:center;gap:9px;padding:13px 26px;border-radius:12px;background:var(--grad);color:#fff;border:none;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(124,58,237,.32);white-space:nowrap;transition:opacity .15s,transform .1s;}
+.btn-scan:hover:not(:disabled){opacity:.92;transform:translateY(-1px);}
+.btn-scan:disabled{opacity:.44;cursor:not-allowed;box-shadow:none;}
+.prog{display:none;background:var(--card);border:1px solid var(--bd1);border-radius:var(--r);padding:18px 22px;margin-bottom:22px;}
+.prog-lbl{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.spin{width:14px;height:14px;border:2px solid var(--bd1);border-top-color:var(--p2);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.prog-track{height:6px;background:var(--bd1);border-radius:3px;overflow:hidden;margin-bottom:6px;}
+.prog-fill{height:100%;background:var(--grad);border-radius:3px;transition:width .4s;width:0%;}
+.prog-sub{font-size:11px;color:var(--t3);}
+.stats{display:none;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px;}
+.stat{background:var(--card);border:1px solid var(--bd2);border-radius:var(--r);padding:16px 18px;}
+.stat.hi{background:var(--grad-s);border-color:rgba(124,58,237,.2);}
+.stat-n{font-size:26px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-l{font-size:12px;color:var(--t3);margin-top:3px;}
+.toolbar{display:none;flex-direction:column;gap:8px;margin-bottom:18px;}
+.toolbar-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.chip{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid var(--bd2);background:var(--card);color:var(--t3);cursor:pointer;white-space:nowrap;user-select:none;transition:all .15s;}
+.chip:hover:not(.on){border-color:var(--p2);color:var(--p2);}
+.chip.on{background:var(--p2);border-color:var(--p2);color:#fff;}
+.sep{width:1px;height:20px;background:var(--bd2);margin:0 2px;flex-shrink:0;}
+.row-label{font-size:12px;color:var(--t3);white-space:nowrap;font-weight:500;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;}
+.empty{grid-column:1/-1;text-align:center;padding:80px 24px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.empty-ico{width:64px;height:64px;border-radius:18px;background:var(--grad-s);display:flex;align-items:center;justify-content:center;font-size:28px;}
+.empty h3{font-size:18px;font-weight:700;}
+.empty p{font-size:14px;color:var(--t3);line-height:1.7;max-width:300px;}
+.card{background:var(--card);border:1px solid var(--bd2);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s,transform .15s,border-color .2s;}
+.card:hover{box-shadow:0 4px 12px rgba(0,0,0,.07),0 12px 32px rgba(124,58,237,.13);transform:translateY(-2px);border-color:var(--bd1);}
+.card.ok{border-color:var(--p2);box-shadow:0 0 0 2px rgba(124,58,237,.1);}
+.card.maybe{border-color:#F59E0B;box-shadow:0 0 0 2px rgba(245,158,11,.08);}
+.card-top{height:3px;background:var(--bd2);}
+.card.ok .card-top{background:var(--grad);}
+.card.maybe .card-top{background:linear-gradient(135deg,#F59E0B,#F97316);}
+.card-head{padding:16px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--bd1);flex-shrink:0;}
+.avatar-ph{width:46px;height:46px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0;}
+.ch-info{flex:1;min-width:0;}
+.ch-name{font-size:14px;font-weight:700;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.ch-name-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px;}
+.badge-ok{padding:2px 7px;border-radius:20px;background:var(--grad);color:#fff;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.badge-maybe{padding:2px 7px;border-radius:20px;background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.ch-handle{font-size:11px;color:var(--t3);margin-top:2px;}
+.sring{flex-shrink:0;width:46px;height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;border:2.5px solid var(--bd2);}
+.sring.hi{border-color:var(--p2);background:rgba(137,95,252,.05);}
+.sring.md{border-color:var(--b);background:rgba(59,130,246,.05);}
+.sring.lo{border-color:var(--bd2);}
+.sn{font-size:16px;font-weight:800;line-height:1;}
+.sring.hi .sn{color:var(--p2);}
+.sring.md .sn{color:var(--b);}
+.sring.lo .sn{color:var(--t3);}
+.sl{font-size:9px;color:var(--t3);margin-top:1px;}
+.card-tags{padding:0 16px 10px;display:flex;gap:5px;flex-wrap:wrap;}
+.tag{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:#EDE9FE;color:#6D28D9;}
+.tag.g{background:var(--gn-bg);color:var(--gn);}
+.tag.a{background:var(--am-bg);color:var(--am);}
+.tag.r{background:var(--rd-bg);color:var(--rd);}
+.tag.b{background:#EFF6FF;color:#1D4ED8;}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--bd2);}
+.metric{padding:10px 8px;text-align:center;border-right:1px solid var(--bd2);}
+.metric:last-child{border-right:none;}
+.mv{font-size:14px;font-weight:700;}
+.mv.acc{color:var(--p2);}
+.mk{font-size:10px;color:var(--t3);margin-top:2px;}
+.stab{padding:14px 16px;border-top:1px solid var(--bd2);}
+.stab-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.stab-ttl{font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;}
+.sbadge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.sbadge.stable{background:var(--gn-bg);color:var(--gn);}
+.sbadge.growing{background:#EFF6FF;color:#1D4ED8;}
+.sbadge.unstable{background:var(--am-bg);color:var(--am);}
+.sbadge.spike{background:var(--rd-bg);color:var(--rd);}
+.sbadge.nodata{background:#F3F4F6;color:var(--t3);}
+.bars{display:flex;align-items:flex-end;gap:3px;height:44px;margin-bottom:10px;}
+.bc{flex:1;display:flex;align-items:flex-end;height:100%;}
+.bf{width:100%;border-radius:3px 3px 0 0;min-height:3px;}
+.bf.n{background:var(--p2);opacity:.6;}
+.bf.s{background:var(--rd);opacity:.9;outline:2px solid var(--rd);outline-offset:1px;border-radius:3px;}
+.bf.u{background:#F59E0B;opacity:.65;}
+.stab-nums{display:grid;grid-template-columns:repeat(3,1fr);}
+.sni{text-align:center;padding:6px 4px 0;border-right:1px solid var(--bd2);}
+.sni:last-child{border-right:none;}
+.sv{font-size:13px;font-weight:700;}
+.sv.acc{color:var(--p2);}
+.sk{font-size:10px;color:var(--t3);margin-top:1px;}
+.spike-alert{margin-top:8px;padding:6px 10px;border-radius:6px;background:var(--rd-bg);border:1px solid rgba(220,38,38,.15);font-size:11px;color:var(--rd);line-height:1.5;}
+.shorts{padding:12px 16px 14px;border-top:1px solid var(--bd2);flex:1;}
+.shorts-ttl{font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;}
+.srow{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--bd2);}
+.srow:last-child{border-bottom:none;}
+.sttl{font-size:12px;color:var(--t2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sttl.sp{color:var(--rd);}
+.svw{font-size:11px;font-weight:600;color:var(--p2);white-space:nowrap;}
+.svw.sp{color:var(--rd);}
+.card-foot{padding:12px 16px;border-top:1px solid var(--bd2);display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;}
+.btn-yt{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--rs);background:#FF0000;color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity .15s;}
+.btn-yt:hover{opacity:.88;}
+.btn-bm{padding:7px 12px;border-radius:var(--rs);border:1.5px solid var(--bd2);background:var(--card);color:var(--t3);font-size:12px;cursor:pointer;transition:all .15s;}
+.btn-bm:hover{border-color:var(--p2);color:var(--p2);}
+.btn-bm.saved{border-color:var(--p2);color:var(--p2);background:#EDE9FE;}
+.no-data-note{padding:8px 12px;background:#F8FAFF;border-radius:6px;font-size:11px;color:var(--t3);line-height:1.6;}
+@media(max-width:768px){.topbar,.api-bar,.main{padding-left:16px;padding-right:16px;}.stats{grid-template-columns:repeat(2,1fr);}.grid{grid-template-columns:1fr;}.hero{flex-direction:column;}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#"><div class="brand-mark">33</div><div class="brand-name">쇼츠 레이더</div></a>
+  <span id="scan-time"></span>
+</header>
+<div class="api-bar">
+  <div class="api-lbl"><div class="api-dot" id="api-dot"></div>YouTube API 키</div>
+  <input class="api-input" id="api-input" type="password" placeholder="AIzaSy... 붙여넣기" autocomplete="off"/>
+  <button class="btn-save" onclick="saveKey()">저장</button>
+  <span id="api-hint">키를 저장해야 스캔이 시작돼요</span>
+</div>
+<main class="main">
+  <div class="hero">
+    <div class="hero-t">
+      <div class="hero-title">임대인 알고리즘에 뜨는 <em>쇼츠 채널</em> 발굴</div>
+      <div class="hero-desc">80개+ 키워드 · 부동산/재테크/생활법률/절세/인테리어 전방위 탐색 · 조회수 안정성 자동 분석</div>
+    </div>
+    <button class="btn-scan" id="scan-btn" onclick="startScan()" disabled>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      지금 스캔하기
+    </button>
+  </div>
+  <div class="prog" id="prog">
+    <div class="prog-lbl"><div class="spin"></div><span id="prog-text">준비 중...</span></div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="prog-sub" id="prog-sub">잠시만 기다려주세요</div>
+  </div>
+  <div class="stats" id="stats">
+    <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">발굴된 채널</div></div>
+    <div class="stat hi"><div class="stat-n" id="s-contact">0</div><div class="stat-l">✓ 컨택 가능</div></div>
+    <div class="stat"><div class="stat-n" id="s-maybe">0</div><div class="stat-l">△ 예비 후보</div></div>
+    <div class="stat"><div class="stat-n" id="s-shorts">0</div><div class="stat-l">쇼츠 활성</div></div>
+    <div class="stat"><div class="stat-n" id="s-rising">0</div><div class="stat-l">라이징 (5만↓)</div></div>
+  </div>
+  <div class="toolbar" id="toolbar">
+    <div class="toolbar-row">
+      <span class="row-label">카테고리</span>
+      <div class="chip on" onclick="setCat(this,'all')" data-cat="all">전체</div>
+      <div class="chip" onclick="setCat(this,'contact')" data-cat="contact">✓ 컨택 가능</div>
+      <div class="chip" onclick="setCat(this,'maybe')" data-cat="maybe">△ 예비 후보</div>
+      <div class="sep"></div>
+      <div class="chip" onclick="setCat(this,'estate')" data-cat="estate">🏠 부동산 시황</div>
+      <div class="chip" onclick="setCat(this,'money')" data-cat="money">💰 재테크·투자</div>
+      <div class="chip" onclick="setCat(this,'tax')" data-cat="tax">🧾 세금·절세</div>
+      <div class="chip" onclick="setCat(this,'law')" data-cat="law">⚖️ 법률·계약</div>
+      <div class="chip" onclick="setCat(this,'repair')" data-cat="repair">🔧 집수리·관리</div>
+      <div class="chip" onclick="setCat(this,'interior')" data-cat="interior">🛋 인테리어</div>
+      <div class="chip" onclick="setCat(this,'life')" data-cat="life">✨ 생활 꿀팁</div>
+      <div class="chip" onclick="setCat(this,'bookmarked')" data-cat="bookmarked">⭐ 북마크</div>
+    </div>
+    <div class="toolbar-row">
+      <span class="row-label">정렬 기준</span>
+      <div class="chip on" onclick="setSort(this,'score')" data-sort="score">적합도순</div>
+      <div class="chip" onclick="setSort(this,'median')" data-sort="median">중앙값 높은순</div>
+      <div class="chip" onclick="setSort(this,'avg')" data-sort="avg">평균 높은순</div>
+      <div class="chip" onclick="setSort(this,'subs')" data-sort="subs">구독자순</div>
+      <div class="chip" onclick="setSort(this,'ratio')" data-sort="ratio">조회수/구독자 비율순</div>
+    </div>
+  </div>
+  <div class="grid" id="grid">
+    <div class="empty">
+      <div class="empty-ico">📡</div>
+      <h3>API 키를 입력하고 스캔을 시작하세요</h3>
+      <p>80개+ 키워드로 임대인 알고리즘에 뜨는 쇼츠 채널을 자동 발굴해드려요.</p>
+    </div>
+  </div>
+</main>
+<script>
+// ── 키워드: "임대인이 볼 만한 콘텐츠" 전방위 확장 ───────────────────
+var KWS = [
+  // 부동산 시황·뉴스
+  {kw:'부동산 전망 쇼츠',cat:'estate'},{kw:'아파트 시세 변동',cat:'estate'},
+  {kw:'부동산 뉴스 쇼츠',cat:'estate'},{kw:'집값 오를까',cat:'estate'},
+  {kw:'부동산 규제 완화',cat:'estate'},{kw:'재건축 재개발',cat:'estate'},
+  {kw:'서울 아파트 매매',cat:'estate'},{kw:'전세 시장 동향',cat:'estate'},
+  {kw:'부동산 하락 상승',cat:'estate'},{kw:'분양 청약 꿀팁',cat:'estate'},
+  // 재테크·투자·경제
+  {kw:'재테크 쇼츠',cat:'money'},{kw:'월급쟁이 재테크',cat:'money'},
+  {kw:'주식 투자 쇼츠',cat:'money'},{kw:'배당주 투자',cat:'money'},
+  {kw:'ETF 투자 방법',cat:'money'},{kw:'절약 저축 꿀팁',cat:'money'},
+  {kw:'경제 상식 쇼츠',cat:'money'},{kw:'금리 인하 영향',cat:'money'},
+  {kw:'노후 준비 방법',cat:'money'},{kw:'파이어족 되는법',cat:'money'},
+  {kw:'부업 수익 창출',cat:'money'},{kw:'월 100만원 부업',cat:'money'},
+  {kw:'돈 모으는 방법',cat:'money'},{kw:'경제적 자유',cat:'money'},
+  // 세금·절세
+  {kw:'세금 절약 방법',cat:'tax'},{kw:'직장인 세금환급',cat:'tax'},
+  {kw:'연말정산 꿀팁',cat:'tax'},{kw:'종합소득세 신고',cat:'tax'},
+  {kw:'부동산 양도세',cat:'tax'},{kw:'증여세 상속세',cat:'tax'},
+  {kw:'임대소득 세금',cat:'tax'},{kw:'법인세 절세',cat:'tax'},
+  {kw:'세무사 꿀팁 쇼츠',cat:'tax'},
+  // 법률·계약·분쟁
+  {kw:'부동산 계약 주의',cat:'law'},{kw:'전세사기 유형',cat:'law'},
+  {kw:'임대차 보호법',cat:'law'},{kw:'내용증명 쓰는법',cat:'law'},
+  {kw:'소액 소송 방법',cat:'law'},{kw:'법률 상식 쇼츠',cat:'law'},
+  {kw:'계약서 주의사항',cat:'law'},{kw:'보증금 지키는법',cat:'law'},
+  {kw:'집주인 세입자 분쟁',cat:'law'},{kw:'명도 절차',cat:'law'},
+  // 집수리·유지관리
+  {kw:'셀프 집수리',cat:'repair'},{kw:'누수 원인 해결',cat:'repair'},
+  {kw:'보일러 점검',cat:'repair'},{kw:'욕실 수리 셀프',cat:'repair'},
+  {kw:'곰팡이 없애기',cat:'repair'},{kw:'결로 해결 방법',cat:'repair'},
+  {kw:'방수 셀프 공사',cat:'repair'},{kw:'타일 보수',cat:'repair'},
+  {kw:'집 유지보수 비용',cat:'repair'},{kw:'하자 보수 요청',cat:'repair'},
+  // 인테리어·리모델링
+  {kw:'인테리어 쇼츠',cat:'interior'},{kw:'셀프 인테리어',cat:'interior'},
+  {kw:'가성비 인테리어',cat:'interior'},{kw:'30평 인테리어',cat:'interior'},
+  {kw:'주방 인테리어',cat:'interior'},{kw:'욕실 리모델링',cat:'interior'},
+  {kw:'아파트 인테리어',cat:'interior'},{kw:'인테리어 비용',cat:'interior'},
+  {kw:'공간 활용 꿀팁',cat:'interior'},{kw:'중고 인테리어',cat:'interior'},
+  // 생활 꿀팁·중장년 라이프
+  {kw:'생활 꿀팁 쇼츠',cat:'life'},{kw:'가전 고르는법',cat:'life'},
+  {kw:'스마트폰 꿀팁',cat:'life'},{kw:'건강 관리 쇼츠',cat:'life'},
+  {kw:'40대 50대 재테크',cat:'life'},{kw:'은퇴 준비 방법',cat:'life'},
+  {kw:'자동차 관리 꿀팁',cat:'life'},{kw:'건강보험 환급',cat:'life'},
+  {kw:'정부 지원금 혜택',cat:'life'},{kw:'생활비 줄이기',cat:'life'},
+  {kw:'알뜰폰 추천',cat:'life'},{kw:'보험 정리 방법',cat:'life'}
+];
+
+var CAT = {
+  estate:'부동산 시황', money:'재테크·투자', tax:'세금·절세',
+  law:'법률·계약', repair:'집수리·관리', interior:'인테리어', life:'생활 꿀팁'
+};
+var CAT_EMOJI = {estate:'🏠',money:'💰',tax:'🧾',law:'⚖️',repair:'🔧',interior:'🛋',life:'✨'};
+
+var apiKey='', channels=[], bookmarks=new Set(JSON.parse(localStorage.getItem('33bm')||'[]'));
+var activeCat='all', activeSort='score', scanning=false;
+
+function saveKey() {
+  var v = document.getElementById('api-input').value.trim();
+  if (!v) return;
+  apiKey = v;
+  document.getElementById('api-dot').classList.add('on');
+  document.getElementById('api-hint').textContent = '✓ 저장됨 — 스캔 준비 완료';
+  document.getElementById('api-hint').style.color = '#059669';
+  document.getElementById('scan-btn').disabled = false;
+}
+document.getElementById('api-input').addEventListener('keydown', function(e) { if (e.key==='Enter') saveKey(); });
+
+function startScan() {
+  if (!apiKey || scanning) return;
+  scanning = true; channels = [];
+  var seen = new Set();
+  setScanUI(true);
+  document.getElementById('prog').style.display = 'block';
+  document.getElementById('stats').style.display = 'none';
+  document.getElementById('toolbar').style.display = 'none';
+  var i = 0;
+  function nextKw() {
+    if (i >= KWS.length) { enrichAll(channels.slice(0, 80), 0); return; }
+    setProg(i, KWS.length, '"' + KWS[i].kw + '" 검색 중...', '키워드 ' + (i+1) + ' / ' + KWS.length);
+    searchChs(KWS[i].kw, KWS[i].cat).then(function(res) {
+      res.forEach(function(ch) {
+        if (!seen.has(ch.id)) {
+          seen.add(ch.id); channels.push(ch);
+        } else {
+          // 이미 있는 채널이면 카테고리 추가
+          var existing = null;
+          for (var j=0; j<channels.length; j++) { if (channels[j].id===ch.id) { existing=channels[j]; break; } }
+          if (existing && existing.cats.indexOf(ch.cat)===-1) existing.cats.push(ch.cat);
+        }
+      });
+    }).catch(function(){}).finally(function() { i++; setTimeout(nextKw, 120); });
+  }
+  nextKw();
+}
+
+function enrichAll(list, idx) {
+  if (idx >= list.length) { finishScan(); return; }
+  setProg(KWS.length, KWS.length, '채널 분석 중... (' + (idx+1) + '/' + list.length + ')', '쇼츠 조회수 수집 중');
+  enrich(list[idx]).catch(function(){}).finally(function() { setTimeout(function(){ enrichAll(list, idx+1); }, 110); });
+}
+
+function finishScan() {
+  channels.forEach(function(ch) { ch.score = calcScore(ch); });
+  channels.sort(function(a,b) { return b.score - a.score; });
+  scanning = false; setScanUI(false);
+  document.getElementById('prog').style.display = 'none';
+  var t = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('scan-time').textContent = '스캔 완료 ' + t + ' · ' + channels.length + '개 채널';
+  renderAll();
+}
+
+function searchChs(q, cat) {
+  var url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + encodeURIComponent(q) + '&type=channel&maxResults=8&regionCode=KR&relevanceLanguage=ko&key=' + apiKey;
+  return fetch(url)
+    .then(function(r) { if (!r.ok) throw new Error('api'); return r.json(); })
+    .then(function(d) {
+      return (d.items||[]).map(function(it) {
+        return {id:it.snippet.channelId, name:it.snippet.channelTitle, desc:it.snippet.description||'',
+          thumb:it.snippet.thumbnails&&it.snippet.thumbnails.default?it.snippet.thumbnails.default.url:'',
+          cat:cat, cats:[cat], subs:null, viewAvg:null, shortsCount:0, totalVideos:0,
+          recentShorts:[], viewStability:null, score:0, handle:''};
+      });
+    });
+}
+
+function enrich(ch) {
+  return fetch('https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&id='+ch.id+'&key='+apiKey)
+  .then(function(r) { if (!r.ok) throw new Error('api'); return r.json(); })
+  .then(function(d) {
+    var it = d.items && d.items[0]; if (!it) return;
+    var st = it.statistics || {};
+    ch.subs = parseInt(st.subscriberCount||0);
+    ch.totalVideos = parseInt(st.videoCount||0);
+    ch.viewTotal = parseInt(st.viewCount||0);
+    ch.viewAvg = ch.totalVideos>0 ? Math.round(ch.viewTotal/ch.totalVideos) : 0;
+    if (it.snippet&&it.snippet.thumbnails&&it.snippet.thumbnails.medium) ch.thumb = it.snippet.thumbnails.medium.url;
+    ch.handle = (it.snippet&&it.snippet.customUrl)||'';
+    return new Promise(function(r){setTimeout(r,60);});
+  })
+  .then(function() {
+    return fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&channelId='+ch.id+'&type=video&videoDuration=short&order=date&maxResults=10&key='+apiKey);
+  })
+  .then(function(r) { if (!r.ok) throw new Error('api'); return r.json(); })
+  .then(function(vd) {
+    var items = vd.items||[];
+    ch.shortsCount = items.length;
+    if (!items.length) return null;
+    var ids = items.map(function(v){return v.id&&v.id.videoId;}).filter(Boolean).join(',');
+    if (!ids) return null;
+    return new Promise(function(r){setTimeout(r,60);}).then(function(){
+      return fetch('https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id='+ids+'&key='+apiKey);
+    });
+  })
+  .then(function(r) { if (!r||!r.ok) return null; return r.json(); })
+  .then(function(sd) {
+    if (!sd) return;
+    ch.recentShorts = (sd.items||[]).map(function(v){
+      return {title:(v.snippet&&v.snippet.title)||'', id:v.id, views:parseInt((v.statistics&&v.statistics.viewCount)||0)};
+    });
+    ch.viewStability = calcStab(ch.recentShorts.map(function(s){return s.views;}));
+  });
+}
+
+function calcStab(views) {
+  var vs = views.filter(function(v){return v!=null&&!isNaN(v)&&v>=0;});
+  if (vs.length < 2) return null;
+  var sorted = vs.slice().sort(function(a,b){return a-b;});
+  var n = sorted.length;
+  var median = n%2===0 ? (sorted[n/2-1]+sorted[n/2])/2 : sorted[Math.floor(n/2)];
+  var avg = vs.reduce(function(s,v){return s+v;},0) / n;
+  var botQ = sorted.slice(0, Math.max(1, Math.floor(n*0.25)));
+  var botAvg = botQ.reduce(function(s,v){return s+v;},0) / botQ.length;
+  var spikes = vs.filter(function(v){return v>median*5&&v>50000;});
+  var stabR = avg>0 ? median/avg : 0;
+  var grade, reason;
+  if (median>=10000&&stabR>=0.3&&botAvg>=2000)      { grade='stable';   reason='안정적'; }
+  else if (spikes.length>=1&&stabR<0.2)              { grade='spike';    reason='스파이크 의심'; }
+  else if (median>=7000&&stabR>=0.2)                 { grade='stable';   reason='안정적'; }
+  else if (median>=3000&&stabR>=0.15)                { grade='growing';  reason='성장 중'; }
+  else if (median>=3000)                             { grade='unstable'; reason='불안정'; }
+  else                                               { grade='spike';    reason='기준 미달'; }
+  var contactable = grade==='stable' && median>=10000;
+  var maybe = !contactable && median>=3000 && (grade==='growing'||grade==='stable'||grade==='unstable');
+  return {views:vs, median:median, avg:avg, botAvg:botAvg, spikes:spikes, stabR:stabR, grade:grade, reason:reason, contactable:contactable, maybe:maybe};
+}
+
+function calcScore(ch) {
+  var s = 0;
+  // 카테고리 키워드 적합도 (최대 30점)
+  var nd = (ch.name+' '+ch.desc).toLowerCase();
+  var kwMap = {
+    estate:['부동산','아파트','전세','매매','분양','재건축','청약','집값','임대'],
+    money:['재테크','투자','주식','etf','배당','절약','저축','경제','파이어','부업','수익','금리'],
+    tax:['세금','절세','양도세','증여세','상속세','소득세','종부세','세무','연말정산'],
+    law:['법률','계약','소송','임대차','보증금','전세사기','내용증명','명도'],
+    repair:['수리','누수','보일러','곰팡이','결로','방수','타일','하자','집수리'],
+    interior:['인테리어','리모델링','인테','공간','주방','욕실','셀프'],
+    life:['꿀팁','절약','생활','건강','보험','지원금','환급','알뜰']
+  };
+  var hits = 0;
+  Object.keys(kwMap).forEach(function(k){
+    kwMap[k].forEach(function(w){ if(nd.indexOf(w)!==-1) hits++; });
+  });
+  s += Math.min(30, hits*4);
+
+  // 구독자 규모 (최대 20점) — 너무 크면 단가 높아서 불리
+  var sub = ch.subs||0;
+  if (sub>=5000&&sub<20000)       s += 20; // 라이징 스윗스팟
+  else if (sub>=20000&&sub<100000) s += 18;
+  else if (sub>=100000&&sub<500000)s += 14;
+  else if (sub>=500000)            s += 8;
+  else if (sub>=1000)              s += 6;
+
+  // 쇼츠 활성도 (최대 10점)
+  if (ch.shortsCount>=5)      s += 10;
+  else if (ch.shortsCount>=2) s += 8;
+  else if (ch.shortsCount>=1) s += 5;
+
+  // 조회수 안정성 (최대 25점)
+  var st = ch.viewStability;
+  if (st) {
+    if (st.grade==='stable'&&st.median>=10000)   s += 25;
+    else if (st.grade==='stable'&&st.median>=7000)s += 18;
+    else if (st.grade==='growing')                s += 12;
+    else if (st.grade==='unstable')               s += 7;
+  }
+
+  // 쇼츠 중앙값 절대값 (최대 15점)
+  if (st) {
+    if (st.median>=10000)      s += 15;
+    else if (st.median>=5000)  s += 10;
+    else if (st.median>=3000)  s += 6;
+    else if (st.median>=1000)  s += 3;
+  } else if (ch.viewAvg>=10000) s += 8;
+  else if (ch.viewAvg>=5000)    s += 4;
+
+  return Math.min(100, s);
+}
+
+function renderAll() {
+  var data = channels.slice();
+  if (activeCat==='bookmarked')   data = data.filter(function(c){return bookmarks.has(c.id);});
+  else if (activeCat==='contact') data = data.filter(function(c){return c.viewStability&&c.viewStability.contactable;});
+  else if (activeCat==='maybe')   data = data.filter(function(c){return c.viewStability&&c.viewStability.maybe;});
+  else if (activeCat!=='all')     data = data.filter(function(c){return c.cats.indexOf(activeCat)!==-1;});
+
+  if (activeSort==='subs')   data.sort(function(a,b){return(b.subs||0)-(a.subs||0);});
+  else if (activeSort==='median') data.sort(function(a,b){return((b.viewStability&&b.viewStability.median)||0)-((a.viewStability&&a.viewStability.median)||0);});
+  else if (activeSort==='avg')    data.sort(function(a,b){return((b.viewStability&&b.viewStability.avg)||b.viewAvg||0)-((a.viewStability&&a.viewStability.avg)||a.viewAvg||0);});
+  else if (activeSort==='ratio')  data.sort(function(a,b){
+    var ra = a.subs>0 ? ((a.viewStability&&a.viewStability.median)||a.viewAvg||0)/a.subs : 0;
+    var rb = b.subs>0 ? ((b.viewStability&&b.viewStability.median)||b.viewAvg||0)/b.subs : 0;
+    return rb-ra;
+  });
+  else data.sort(function(a,b){return b.score-a.score;});
+
+  document.getElementById('stats').style.display = 'grid';
+  document.getElementById('toolbar').style.display = 'flex';
+  document.getElementById('s-total').textContent   = channels.length;
+  document.getElementById('s-contact').textContent = channels.filter(function(c){return c.viewStability&&c.viewStability.contactable;}).length;
+  document.getElementById('s-maybe').textContent   = channels.filter(function(c){return c.viewStability&&c.viewStability.maybe;}).length;
+  document.getElementById('s-shorts').textContent  = channels.filter(function(c){return c.shortsCount>0;}).length;
+  document.getElementById('s-rising').textContent  = channels.filter(function(c){return c.subs>0&&c.subs<=50000;}).length;
+
+  var grid = document.getElementById('grid');
+  if (!data.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-ico">🔍</div><h3>채널이 없어요</h3><p>다른 카테고리를 선택하거나 다시 스캔해보세요.</p></div>';
+    return;
+  }
+  grid.innerHTML = data.map(cardHTML).join('');
+}
+
+function cardHTML(ch) {
+  var st = ch.viewStability;
+  var isOk    = st&&st.contactable===true;
+  var isMaybe = !isOk&&st&&st.maybe===true;
+  var sc   = ch.score;
+  var ring = sc>=75?'hi':sc>=50?'md':'lo';
+  var slbl = sc>=75?'고적합':sc>=50?'적합':'참고용';
+  var subT = ch.subs!=null ? fmt(ch.subs)+'명' : '—';
+  var medT = st ? fmt(Math.round(st.median))+'회' : '—';
+  var avgT = st ? fmt(Math.round(st.avg))+'회' : (ch.viewAvg?fmt(ch.viewAvg)+'회':'—');
+  var bm   = bookmarks.has(ch.id);
+
+  var avEl = ch.thumb
+    ? '<img class="avatar" src="'+esc(ch.thumb)+'" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"><div class="avatar-ph" style="display:none">'+ch.name.charAt(0)+'</div>'
+    : '<div class="avatar-ph">'+ch.name.charAt(0)+'</div>';
+
+  // 카테고리 태그들 — 여러 카테고리 모두 표시
+  var tagList = [];
+  ch.cats.forEach(function(c){
+    if(CAT[c]) tagList.push('<span class="tag">'+(CAT_EMOJI[c]||'')+' '+CAT[c]+'</span>');
+  });
+  if (ch.shortsCount>0) tagList.push('<span class="tag g">쇼츠 활성</span>');
+  if (ch.subs>0&&ch.subs<=50000) tagList.push('<span class="tag a">라이징</span>');
+  if (st&&st.grade==='spike')   tagList.push('<span class="tag r">스파이크 주의</span>');
+  if (st&&st.grade==='growing') tagList.push('<span class="tag b">성장 중</span>');
+  var tags = tagList.join('');
+
+  var nameBadge = isOk ? '<span class="badge-ok">✓ 컨택 가능</span>' : isMaybe ? '<span class="badge-maybe">△ 예비 후보</span>' : '';
+
+  // 안정성 섹션
+  var stabHtml = '';
+  if (st&&st.views.length>0) {
+    var mx = Math.max.apply(null, st.views.concat([1]));
+    var barsH = st.views.slice(0,10).map(function(v){
+      var h = Math.max(6,Math.round((v/mx)*100));
+      var isSp = v>st.median*5&&v>50000;
+      var cls  = isSp ? 's' : (st.grade==='stable'||st.grade==='growing') ? 'n' : 'u';
+      return '<div class="bc"><div class="bf '+cls+'" style="height:'+h+'%"></div></div>';
+    }).join('');
+    var spNote = st.spikes.length>0
+      ? '<div class="spike-alert">⚠ 뻥튀기 '+st.spikes.length+'건 감지 — 평균을 왜곡하는 영상이 있어요. 컨택 비추천.</div>' : '';
+    var accMed = st.median>=10000 ? ' acc' : '';
+    stabHtml = '<div class="stab">'+
+      '<div class="stab-head"><span class="stab-ttl">쇼츠 조회수 분포 ('+st.views.length+'개)</span>'+
+      '<span class="sbadge '+st.grade+'">'+(st.grade==='stable'?'✓':st.grade==='spike'?'⚠':st.grade==='growing'?'↑':'△')+' '+st.reason+'</span></div>'+
+      '<div class="bars">'+barsH+'</div>'+spNote+
+      '<div class="stab-nums">'+
+      '<div class="sni"><div class="sv'+accMed+'">'+fmt(Math.round(st.median))+'</div><div class="sk">중앙값</div></div>'+
+      '<div class="sni"><div class="sv">'+fmt(Math.round(st.avg))+'</div><div class="sk">평균</div></div>'+
+      '<div class="sni"><div class="sv">'+fmt(Math.round(st.botAvg))+'</div><div class="sk">하위 25%</div></div>'+
+      '</div></div>';
+  } else {
+    var hint = ch.viewAvg>0 ? '전체 영상 평균 '+fmt(ch.viewAvg)+'회 (쇼츠 개별 데이터 없음)' : '쇼츠 영상이 부족한 채널이에요.';
+    stabHtml = '<div class="stab"><div class="stab-head"><span class="stab-ttl">쇼츠 조회수 분포</span>'+
+      '<span class="sbadge nodata">— 데이터 없음</span></div>'+
+      '<div class="no-data-note">'+hint+'</div></div>';
+  }
+
+  // 최근 쇼츠 목록
+  var shortRows = '';
+  if (ch.recentShorts.length>0) {
+    var sorted = ch.recentShorts.slice().sort(function(a,b){return b.views-a.views;});
+    shortRows = sorted.slice(0,3).map(function(s){
+      var isSp = st&&s.views>st.median*5&&s.views>50000;
+      return '<div class="srow">'+
+        '<span class="sttl'+(isSp?' sp':'')+'">'+esc(s.title)+'</span>'+
+        '<span class="svw'+(isSp?' sp':'')+'">'+fmt(s.views)+'회'+(isSp?' ⚠':'')+'</span></div>';
+    }).join('');
+  } else {
+    shortRows = '<div style="font-size:12px;color:var(--t3)">최근 쇼츠 없음</div>';
+  }
+
+  var accM    = st&&st.median>=10000 ? ' acc' : '';
+  var cardCls = 'card'+(isOk?' ok':isMaybe?' maybe':'');
+  var ytSvg   = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.75 15.5V8.5l6.25 3.5-6.25 3.5z"/></svg>';
+
+  return '<div class="'+cardCls+'" id="card-'+ch.id+'">'+
+    '<div class="card-top"></div>'+
+    '<div class="card-head">'+avEl+
+    '<div class="ch-info">'+
+    '<div class="ch-name"><span class="ch-name-t" title="'+esc(ch.name)+'">'+esc(ch.name)+'</span>'+nameBadge+'</div>'+
+    '<div class="ch-handle">'+(ch.handle?'@'+ch.handle.replace('@',''):ch.id.slice(0,14)+'…')+'</div>'+
+    '</div>'+
+    '<div class="sring '+ring+'"><div class="sn">'+sc+'</div><div class="sl">'+slbl+'</div></div>'+
+    '</div>'+
+    '<div class="card-tags">'+tags+'</div>'+
+    '<div class="metrics">'+
+    '<div class="metric"><div class="mv">'+subT+'</div><div class="mk">구독자</div></div>'+
+    '<div class="metric"><div class="mv'+accM+'">'+medT+'</div><div class="mk">쇼츠 중앙값</div></div>'+
+    '<div class="metric"><div class="mv">'+avgT+'</div><div class="mk">쇼츠 평균</div></div>'+
+    '</div>'+stabHtml+
+    '<div class="shorts"><div class="shorts-ttl">최근 쇼츠 (조회수 높은순)</div>'+shortRows+'</div>'+
+    '<div class="card-foot">'+
+    '<a class="btn-yt" href="https://youtube.com/channel/'+ch.id+'" target="_blank" rel="noopener">'+ytSvg+'유튜브에서 보기</a>'+
+    '<button class="btn-bm'+(bm?' saved':'')+'" onclick="toggleBm(\''+ch.id+'\')" id="bm-'+ch.id+'">'+(bm?'★ 저장됨':'☆ 북마크')+'</button>'+
+    '</div></div>';
+}
+
+function setCat(el,cat) {
+  document.querySelectorAll('[data-cat]').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on'); activeCat=cat;
+  if (channels.length) renderAll();
+}
+function setSort(el,key) {
+  document.querySelectorAll('[data-sort]').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on'); activeSort=key;
+  if (channels.length) renderAll();
+}
+function toggleBm(id) {
+  if (bookmarks.has(id)) bookmarks.delete(id); else bookmarks.add(id);
+  localStorage.setItem('33bm', JSON.stringify(Array.from(bookmarks)));
+  var b = document.getElementById('bm-'+id);
+  if (b) { b.className='btn-bm'+(bookmarks.has(id)?' saved':''); b.textContent=bookmarks.has(id)?'★ 저장됨':'☆ 북마크'; }
+}
+function setScanUI(on) {
+  var btn = document.getElementById('scan-btn');
+  btn.disabled = on;
+  btn.innerHTML = on
+    ? '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 스캔 중...'
+    : '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> 다시 스캔';
+}
+function setProg(done,total,label,sub) {
+  var p = total>0 ? Math.round(done/total*100) : 0;
+  document.getElementById('prog-fill').style.width = p+'%';
+  document.getElementById('prog-text').textContent = label;
+  document.getElementById('prog-sub').textContent = (sub||'') + (total>0 ? ' ('+done+'/'+total+')' : '');
+}
+function fmt(n) {
+  if (n==null||isNaN(n)) return '—';
+  if (n>=10000) return (n/10000).toFixed(1).replace(/\.0$/,'')+'만';
+  if (n>=1000)  return (n/1000).toFixed(1).replace(/\.0$/,'')+'천';
+  return String(n);
+}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>
+
 :root {
   --p: #7C3AED; --p2: #895FFC; --b: #3B82F6;
   --grad: linear-gradient(135deg, #7C3AED 0%, #3B82F6 100%);<!DOCTYPE html>
